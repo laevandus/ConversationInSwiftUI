@@ -16,23 +16,17 @@ struct Message: Identifiable {
     let text: String
 }
 
-final class Conversation: BindableObject {
+final class Conversation: ObservableObject {
     private let session = Session()
-    private var messageSubscriber = AnySubscriber<Message, Never>()
+    private var messageSubscriber: AnyCancellable?
     
     init() {
         messageSubscriber = session.messageFeed.sink { [weak self] (receivedMessage) in
             self?.messages.append(receivedMessage)
-        }.eraseToAnySubscriber()
-    }
-    
-    private(set) var messages = [Message]() {
-        didSet {
-            didChange.send()
         }
     }
     
-    var didChange = PassthroughSubject<Void, Never>()
+    @Published private(set) var messages = [Message]()
     
     func send(_ message: Message) {
         session.send(message)

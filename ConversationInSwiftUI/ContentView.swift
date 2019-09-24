@@ -6,10 +6,11 @@
 //  Copyright © 2019 Augmented Code. All rights reserved.
 //
 
+import Combine
 import SwiftUI
 
 struct ContentView: View {
-    @ObjectBinding var conversation: Conversation
+    @ObservedObject var conversation: Conversation
     
     var body: some View {
         NavigationView {
@@ -29,7 +30,7 @@ struct InputView: View {
     
     var body: some View {
         HStack {
-            TextField($inputText)
+            TextField("", text: $inputText)
                 .padding(6)
                 .background(Color.white)
             Button(action: sendMessage) {
